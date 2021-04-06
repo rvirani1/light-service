@@ -376,10 +376,6 @@ module TestDoubles
     def self.actions
       [
         AddsOneAction,
-        reduce_until(->(ctx) { ctx.number > 3 }, [
-                       AddsTwoAction,
-                       AddsThreeAction
-                     ])
       ]
     end
   end
