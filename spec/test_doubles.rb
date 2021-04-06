@@ -366,38 +366,6 @@ module TestDoubles
     end
   end
 
-  class ReduceUntilOrganizer
-    extend LightService::Organizer
-
-    def self.call(ctx)
-      with(ctx).reduce(actions)
-    end
-
-    def self.actions
-      [
-        AddsOneAction,
-      ]
-    end
-  end
-
-  class ReduceIfOrganizer
-    extend LightService::Organizer
-
-    def self.call(ctx)
-      with(ctx).reduce(actions)
-    end
-
-    def self.actions
-      [
-        AddsOneAction,
-        reduce_if(->(ctx) { ctx.number > 1 }, [
-                    AddsTwoAction,
-                    AddsThreeAction
-                  ])
-      ]
-    end
-  end
-
   class MakesTeaExpectingReservedKey
     extend LightService::Action
     expects :tea, :message

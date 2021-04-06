@@ -37,10 +37,6 @@ module LightService
         with({}).reduce(actions)
       end
 
-      def reduce_if(condition_block, steps)
-        ReduceIf.run(self, condition_block, steps)
-      end
-
       def iterate(collection_key, steps)
         Iterate.run(self, collection_key, steps)
       end
