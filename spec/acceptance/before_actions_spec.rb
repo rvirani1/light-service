@@ -50,46 +50,4 @@ RSpec.describe 'Action before_actions' do
       expect(result.fetch(:number)).to eq(1)
     end
   end
-
-  describe 'works with callbacks' do
-    it 'can interact with actions from the outside' do
-      TestDoubles::TestWithCallback.before_actions = [
-        lambda do |ctx|
-          if ctx.current_action == TestDoubles::AddToTotalAction
-            ctx.total -= 1000
-          end
-        end
-      ]
-      result = TestDoubles::TestWithCallback.call
-
-      expect(result.counter).to eq(3)
-      expect(result.total).to eq(-2994)
-    end
-  end
-
-  describe 'can halt all execution with a raised error' do
-    it 'does not call the rest of the callback steps' do
-      class SkipContextError < StandardError
-        attr_reader :ctx
-
-        def initialize(msg, ctx)
-          @ctx = ctx
-          super(msg)
-        end
-      end
-      TestDoubles::TestWithCallback.before_actions = [
-        lambda do |ctx|
-          if ctx.current_action == TestDoubles::IncrementCountAction
-            ctx.total -= 1000
-            raise SkipContextError.new("stop context now", ctx)
-          end
-        end
-      ]
-      begin
-        TestDoubles::TestWithCallback.call
-      rescue SkipContextError => e
-        expect(e.ctx).not_to be_empty
-      end
-    end
-  end
 end

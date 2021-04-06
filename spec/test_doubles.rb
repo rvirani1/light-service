@@ -309,35 +309,6 @@ module TestDoubles
     end
   end
 
-  class CallbackOrganizer
-    extend LightService::Organizer
-
-    def self.call(ctx)
-      with(ctx).reduce(actions)
-    end
-
-    def self.actions
-      [
-        AddsOneAction,
-        with_callback(AddTenCallbackAction, [
-                        AddsTwoAction,
-                        AddsThreeAction
-                      ])
-      ]
-    end
-  end
-
-  class AddTenCallbackAction
-    extend LightService::Action
-    expects :number, :callback
-
-    executed do |context|
-      context.number += 10
-      context.number =
-        context.callback.call(context).fetch(:number)
-    end
-  end
-
   class MakesTeaExpectingReservedKey
     extend LightService::Action
     expects :tea, :message

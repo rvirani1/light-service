@@ -41,10 +41,6 @@ module LightService
         Execute.run(code_block)
       end
 
-      def with_callback(action, steps)
-        WithCallback.run(self, action, steps)
-      end
-
       def log_with(logger)
         @logger = logger
       end

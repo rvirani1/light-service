@@ -74,20 +74,10 @@ module LightService
       end
 
       def call_before_action(context)
-        invoke_callbacks(context[:_before_actions], context)
+        context
       end
 
       def call_after_action(context)
-        invoke_callbacks(context[:_after_actions], context)
-      end
-
-      def invoke_callbacks(callbacks, context)
-        return context unless callbacks
-
-        callbacks.each do |cb|
-          cb.call(context)
-        end
-
         context
       end
     end
