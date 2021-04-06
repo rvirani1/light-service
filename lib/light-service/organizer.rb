@@ -37,10 +37,6 @@ module LightService
         with({}).reduce(actions)
       end
 
-      def iterate(collection_key, steps)
-        Iterate.run(self, collection_key, steps)
-      end
-
       def execute(code_block)
         Execute.run(code_block)
       end

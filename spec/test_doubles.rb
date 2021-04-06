@@ -309,34 +309,6 @@ module TestDoubles
     end
   end
 
-  class IterateOrganizer
-    extend LightService::Organizer
-
-    def self.call(ctx)
-      with(ctx).reduce(actions)
-    end
-
-    def self.actions
-      [
-        AddsOneIteratesAction,
-        iterate(:numbers, [
-                  AddsTwoAction,
-                  AddsThreeAction
-                ])
-      ]
-    end
-  end
-
-  class AddsOneIteratesAction
-    extend LightService::Action
-    expects :numbers
-    promises :numbers
-
-    executed do |context|
-      context.numbers = context.numbers.map { |n| n + 1 }
-    end
-  end
-
   class CallbackOrganizer
     extend LightService::Organizer
 
@@ -445,39 +417,6 @@ module TestDoubles
     executed { |_ctx| }
   end
 
-  class TestIterate
-    extend LightService::Organizer
-
-    def self.call(context)
-      with(context)
-        .reduce([iterate(:counters,
-                         [TestDoubles::AddsOneAction])])
-    end
-
-    def self.call_single(context)
-      with(context)
-        .reduce([iterate(:counters,
-                         TestDoubles::AddsOneAction)])
-    end
-  end
-
-  class TestWithCallback
-    extend LightService::Organizer
-
-    def self.call(context = {})
-      with(context).reduce(actions)
-    end
-
-    def self.actions
-      [
-        SetUpContextAction,
-        with_callback(IterateCollectionAction,
-                      [IncrementCountAction,
-                       AddToTotalAction])
-      ]
-    end
-  end
-
   class SetUpContextAction
     extend LightService::Action
     promises :numbers, :counter, :total
@@ -486,19 +425,6 @@ module TestDoubles
       ctx.numbers = [1, 2, 3]
       ctx.counter = 0
       ctx.total = 0
-    end
-  end
-
-  class IterateCollectionAction
-    extend LightService::Action
-    expects :numbers, :callback
-    promises :number
-
-    executed do |ctx|
-      ctx.numbers.each do |number|
-        ctx.number = number
-        ctx.callback.call(ctx)
-      end
     end
   end
 

@@ -13,20 +13,6 @@ RSpec.describe 'Action before_actions' do
 
       expect(result.fetch(:number)).to eq(4)
     end
-
-    it 'works with iterator' do
-      TestDoubles::TestIterate.before_actions = [
-        lambda do |ctx|
-          ctx.number -= 2 if ctx.current_action == TestDoubles::AddsOneAction
-        end
-      ]
-
-      result = TestDoubles::TestIterate.call(:number => 0,
-                                             :counters => [1, 2, 3, 4])
-
-      expect(result).to be_success
-      expect(result.number).to eq(-4)
-    end
   end
 
   describe 'can be added to organizers declaratively' do
