@@ -12,7 +12,7 @@ module LightService
       def with(data = {})
         data[:_aliases] = @aliases if @aliases
 
-        WithReducerFactory.make(self).with(data)
+        WithReducer.new(self).with(data)
       end
 
       def reduce(*actions)
