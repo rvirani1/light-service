@@ -1,7 +1,7 @@
 module LightService
   module Organizer
     class WithReducer
-      attr_reader   :context
+      attr_reader :context
       attr_accessor :organizer
 
       def initialize(monitored_organizer = nil)
@@ -12,19 +12,6 @@ module LightService
         @context = LightService::Context.make(data)
         @context.organized_by = organizer
         self
-      end
-
-      def around_each(handler)
-        @around_each_handler = handler
-        self
-      end
-
-      def around_each_handler
-        @around_each_handler ||= Class.new do
-          def self.call(_context)
-            yield
-          end
-        end
       end
 
       def reduce(*actions)
@@ -48,23 +35,21 @@ module LightService
         reversable_actions(actions)
           .reverse
           .reduce(context) do |context, action|
-            if action.respond_to?(:rollback)
-              action.rollback(context)
-            else
-              context
-            end
+          if action.respond_to?(:rollback)
+            action.rollback(context)
+          else
+            context
           end
+        end
       end
 
       private
 
       def invoke_action(current_context, action)
-        around_each_handler.call(current_context) do
-          if action.respond_to?(:call)
-            action.call(current_context)
-          else
-            action.execute(current_context)
-          end
+        if action.respond_to?(:call)
+          action.call(current_context)
+        else
+          action.execute(current_context)
         end
       end
 

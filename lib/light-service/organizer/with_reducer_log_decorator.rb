@@ -27,11 +27,6 @@ module LightService
         self
       end
 
-      def around_each(handler)
-        decorated.around_each(handler)
-        self
-      end
-
       def reduce(*actions)
         decorated.reduce(*actions) do |context, action|
           next context if logged?
