@@ -77,32 +77,5 @@ module LightService
         !are_all_keys_in_context?(keys)
       end
     end
-
-    class ReservedKeysVerifier < KeyVerifier
-      def violated_keys
-        (action.promised_keys + action.expected_keys) & reserved_keys
-      end
-
-      def error_message
-        "promised or expected keys cannot be a " \
-        "reserved key: [#{format_keys(violated_keys)}]"
-      end
-
-      def keys
-        violated_keys
-      end
-
-      def error_to_throw
-        ReservedKeysInContextError
-      end
-
-      def throw_error_predicate(keys)
-        keys.any?
-      end
-
-      def reserved_keys
-        %i[message error_code current_action].freeze
-      end
-    end
   end
 end
