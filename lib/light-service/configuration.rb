@@ -2,14 +2,10 @@ module LightService
   class Configuration
     class << self
       attr_accessor :capture_errors
-      attr_writer :logger, :localization_adapter
+      attr_writer :logger
 
       def logger
         @logger ||= _default_logger
-      end
-
-      def localization_adapter
-        @localization_adapter ||= LocalizationAdapter.new
       end
 
       private
