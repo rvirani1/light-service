@@ -3,7 +3,6 @@ require 'active_support/core_ext/string'
 require 'light-service/version'
 
 require 'light-service/errors'
-require 'light-service/configuration'
 require 'light-service/context'
 require 'light-service/context/key_verifier'
 require 'light-service/organizer/with_reducer'
