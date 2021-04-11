@@ -18,7 +18,12 @@ module LightService
       end
 
       def execute(code_block)
-        Execute.run(code_block)
+        lambda do |ctx|
+          return ctx if ctx.stop_processing?
+
+          code_block.call(ctx)
+          ctx
+        end
       end
 
       def add_to_context(**args)
