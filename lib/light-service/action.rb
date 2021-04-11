@@ -6,13 +6,6 @@ module LightService
       base_class.extend Macros
     end
 
-    def self.included(base_class)
-      msg = "including LightService::Action is deprecated. " \
-            "Please use `extend LightService::Action` instead"
-      ActiveSupport::Deprecation.warn(msg)
-      base_class.extend Macros
-    end
-
     module Macros
       def expects(*args)
         expected_keys.concat(args)
