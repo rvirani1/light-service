@@ -32,7 +32,7 @@ module LightService
           action_context.current_action = self
 
           Context::KeyVerifier.verify_keys(action_context, self) do
-            action_context.define_accessor_methods_for_keys(all_keys)
+            action_context.define_accessor_methods_for_keys(expected_keys + promised_keys)
 
             catch(:jump_when_failed) do
               yield(action_context)
@@ -47,10 +47,6 @@ module LightService
         return context if context.is_a? LightService::Context
 
         LightService::Context.make(context)
-      end
-
-      def all_keys
-        expected_keys + promised_keys
       end
     end
   end
