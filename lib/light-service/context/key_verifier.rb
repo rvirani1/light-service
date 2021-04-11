@@ -35,7 +35,6 @@ module LightService
         return context if context.failure?
 
         if throw_error_predicate(keys)
-          Configuration.logger.error error_message
           raise error_to_throw, error_message
         end
 

@@ -23,14 +23,6 @@ module LightService
         Execute.run(code_block)
       end
 
-      def log_with(logger)
-        @logger = logger
-      end
-
-      def logger
-        @logger
-      end
-
       def add_to_context(**args)
         args.map do |key, value|
           execute(->(ctx) { ctx[key.to_sym] = value })
