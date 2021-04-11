@@ -1,32 +1,25 @@
 module LightService
   module Organizer
+    attr_reader :context
+
     def with(data = {})
       data[:_aliases] = @aliases if @aliases
-
-      WithReducer.new(self).with(data)
+      @context = LightService::Context.make(data)
+      self
     end
 
     def reduce(*actions)
-      with({}).reduce(actions)
-    end
+      raise "No action(s) were provided" if actions.empty?
 
-    def execute(code_block)
-      lambda do |ctx|
-        return ctx if ctx.stop_processing?
+      actions.flatten!
 
-        code_block.call(ctx)
-        ctx
+      actions.each_with_object(context) do |action, current_context|
+        if action.respond_to?(:call)
+          action.call(current_context)
+        else
+          action.execute(current_context)
+        end
       end
-    end
-
-    def add_to_context(**args)
-      args.map do |key, value|
-        execute(->(ctx) { ctx[key.to_sym] = value })
-      end
-    end
-
-    def add_aliases(args)
-      execute(->(ctx) { ctx.assign_aliases(ctx.aliases.merge(args)) })
     end
 
     def aliases(key_hash)
