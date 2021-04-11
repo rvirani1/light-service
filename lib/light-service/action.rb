@@ -18,7 +18,7 @@ module LightService
 
     def executed
       define_singleton_method :execute do |context = {}|
-        action_context = create_action_context(context)
+        action_context = context.is_a?(::LightService::Context) ? context : LightService::Context.make(context)
         return action_context if action_context.stop_processing?
 
         # Store the action within the context
@@ -32,14 +32,6 @@ module LightService
           end
         end
       end
-    end
-
-    private
-
-    def create_action_context(context)
-      return context if context.is_a? LightService::Context
-
-      LightService::Context.make(context)
     end
   end
 end
