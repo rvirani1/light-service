@@ -50,11 +50,6 @@ module LightService
       @skip_remaining
     end
 
-    def reset_skip_remaining!
-      @message = nil
-      @skip_remaining = false
-    end
-
     def succeed!(message = nil, _options = {})
       @message = message
       @outcome = Outcomes::SUCCESS
@@ -79,14 +74,6 @@ module LightService
     def fail_and_return!(*args)
       fail!(*args)
       throw(:jump_when_failed)
-    end
-
-    def skip_all!(message = nil)
-      warning_msg = "Using skip_all! has been deprecated, " \
-                    "please use `skip_remaining!` instead."
-      ActiveSupport::Deprecation.warn(warning_msg)
-
-      skip_remaining!(message)
     end
 
     def skip_remaining!(message = nil)
