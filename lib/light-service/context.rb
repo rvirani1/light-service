@@ -55,13 +55,6 @@ module LightService
       @skip_remaining = false
     end
 
-    def outcome
-      msg = '`Context#outcome` attribute reader is ' \
-            'DEPRECATED and will be removed'
-      ActiveSupport::Deprecation.warn(msg)
-      @outcome
-    end
-
     def succeed!(message = nil, _options = {})
       @message = message
       @outcome = Outcomes::SUCCESS
