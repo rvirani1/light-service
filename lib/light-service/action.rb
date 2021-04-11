@@ -41,17 +41,6 @@ module LightService
         end
       end
 
-      def rolled_back
-        msg = "`rolled_back` macro can not be invoked again"
-        raise msg if respond_to?(:rollback)
-
-        define_singleton_method :rollback do |context = {}|
-          yield(context)
-
-          context
-        end
-      end
-
       private
 
       def create_action_context(context)

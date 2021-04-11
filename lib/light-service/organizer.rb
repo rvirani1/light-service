@@ -1,5 +1,3 @@
-require 'active_support/deprecation'
-
 module LightService
   module Organizer
     def self.extended(base_class)

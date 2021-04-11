@@ -88,11 +88,6 @@ module LightService
       throw(:jump_when_failed)
     end
 
-    def fail_with_rollback!(message = nil, error_code = nil)
-      fail!(message, error_code)
-      raise FailWithRollbackError
-    end
-
     def skip_all!(message = nil)
       warning_msg = "Using skip_all! has been deprecated, " \
                     "please use `skip_remaining!` instead."

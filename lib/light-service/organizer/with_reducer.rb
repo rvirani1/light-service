@@ -22,23 +22,9 @@ module LightService
         actions.each_with_object(context) do |action, current_context|
           begin
             invoke_action(current_context, action)
-          rescue FailWithRollbackError
-            reduce_rollback(actions)
           ensure
             # For logging
             yield(current_context, action) if block_given?
-          end
-        end
-      end
-
-      def reduce_rollback(actions)
-        reversable_actions(actions)
-          .reverse
-          .reduce(context) do |context, action|
-          if action.respond_to?(:rollback)
-            action.rollback(context)
-          else
-            context
           end
         end
       end
@@ -51,13 +37,6 @@ module LightService
         else
           action.execute(current_context)
         end
-      end
-
-      def reversable_actions(actions)
-        index_of_current_action = actions.index(@context.current_action) || 0
-
-        # Reverse from the point where the fail was triggered
-        actions.take(index_of_current_action + 1)
       end
     end
   end
