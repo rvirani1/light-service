@@ -40,15 +40,6 @@ module LightService
 
         context
       end
-
-      def self.verify_keys(context, action, &block)
-        ReservedKeysVerifier.new(context, action).verify
-        ExpectedKeyVerifier.new(context, action).verify
-
-        block.call
-
-        PromisedKeyVerifier.new(context, action).verify
-      end
     end
 
     class ExpectedKeyVerifier < KeyVerifier

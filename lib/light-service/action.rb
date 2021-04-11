@@ -24,13 +24,16 @@ module LightService
         # Store the action within the context
         action_context.current_action = self
 
-        Context::KeyVerifier.verify_keys(action_context, self) do
-          action_context.define_accessor_methods_for_keys(expected_keys + promised_keys)
+        LightService::Context::ReservedKeysVerifier.new(action_context, self).verify
+        LightService::Context::ExpectedKeyVerifier.new(action_context, self).verify
 
-          catch(:jump_when_failed) do
-            yield(action_context)
-          end
+        action_context.define_accessor_methods_for_keys(expected_keys + promised_keys)
+
+        catch(:jump_when_failed) do
+          yield(action_context)
         end
+
+        LightService::Context::PromisedKeyVerifier.new(action_context, self).verify
       end
     end
   end
