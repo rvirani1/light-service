@@ -10,7 +10,6 @@ module LightService
 
       def with(data = {})
         @context = LightService::Context.make(data)
-        @context.organized_by = organizer
         self
       end
 
