@@ -4,6 +4,5 @@ require 'light-service/version'
 
 require 'light-service/errors'
 require 'light-service/context'
-require 'light-service/context/key_verifier'
 require 'light-service/action'
 require 'light-service/organizer'

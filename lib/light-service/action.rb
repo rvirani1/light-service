@@ -19,23 +19,24 @@ module LightService
     end
 
     def executed
-      define_singleton_method :execute do |context = {}|
-        action_context = context.is_a?(::LightService::Context) ? context : LightService::Context.make(context)
-        return action_context if action_context.stop_processing?
+      define_singleton_method :execute do |params = {}|
+        context = params.is_a?(::LightService::Context) ? params : LightService::Context.make(params)
+        return context if context.stop_processing?
 
         # Store the action within the context
-        action_context.current_action = self
+        context.current_action = self
 
         verify_reserved_keys!
-        LightService::Context::ExpectedKeyVerifier.new(action_context, self).verify
+        verify_expected_keys!(context)
 
-        action_context.define_accessor_methods_for_keys(all_keys)
+        context.define_accessor_methods_for_keys(all_keys)
 
         catch(:jump_when_failed) do
-          yield(action_context)
+          yield(context)
         end
 
-        LightService::Context::PromisedKeyVerifier.new(action_context, self).verify
+        verify_promised_keys!(context)
+        context
       end
     end
 
@@ -50,8 +51,30 @@ module LightService
       return if violated_keys.empty?
 
       raise(
-        ReservedKeysInContextError.new(
+        LightService::ReservedKeysInContextError.new(
           "promised or expected keys cannot be a reserved key: [#{violated_keys.to_sentence}]")
+      )
+    end
+
+    def verify_expected_keys!(action_context)
+      violated_keys = expected_keys - action_context.keys
+      return if violated_keys.empty?
+
+      raise(
+        LightService::ExpectedKeysNotInContextError.new(
+          "expected keys #{violated_keys.to_sentence} to be in the context during #{self}"
+        )
+      )
+    end
+
+    def verify_promised_keys!(action_context)
+      violated_keys = promised_keys - action_context.keys
+      return if violated_keys.empty?
+
+      raise(
+        LightService::PromisedKeysNotInContextError.new(
+          "promised keys #{violated_keys.to_sentence} to be in the context during #{self}"
+        )
       )
     end
   end
