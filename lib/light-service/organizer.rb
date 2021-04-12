@@ -14,11 +14,7 @@ module LightService
       actions.flatten!
 
       actions.each_with_object(context) do |action, current_context|
-        if action.respond_to?(:call)
-          action.call(current_context)
-        else
-          action.execute(current_context)
-        end
+        action.execute(current_context)
       end
     end
 
