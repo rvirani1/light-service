@@ -10,10 +10,7 @@ module LightService
   class Context < Hash
     attr_accessor :message, :error_code, :current_action
 
-    def initialize(context = {},
-                   outcome = Outcomes::SUCCESS,
-                   message = '',
-                   error_code = nil)
+    def initialize(context = {}, outcome = Outcomes::SUCCESS, message = '', error_code = nil)
       @outcome = outcome
       @message = message
       @error_code = error_code

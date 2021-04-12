@@ -20,7 +20,7 @@ module LightService
 
     def executed
       define_singleton_method :execute do |params = {}|
-        context = params.is_a?(::LightService::Context) ? params : LightService::Context.make(params)
+        context = LightService::Context.make(params)
         return context if context.stop_processing?
 
         # Store the action within the context
